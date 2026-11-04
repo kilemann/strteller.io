@@ -52,12 +52,34 @@ button:focus-visible{outline:3px solid var(--ul);outline-offset:2px}
 .info dd{margin:0;font:500 .9rem var(--mono);text-align:right;min-width:0;overflow-wrap:anywhere}
 .log{font:.8rem/1.5 var(--mono);color:var(--muted);min-height:1.5em;overflow-wrap:anywhere;white-space:pre-line}
 .log.err{color:var(--bad)}
+
+/* ---- Navn, versjon og info-knapp (som i Himmelur) ---- */
+.ai-row{display:flex;align-items:center;gap:12px;min-width:0}
+.ai-ver{font:500 11px var(--mono);color:var(--muted);margin-left:6px;vertical-align:super;letter-spacing:0;text-transform:none;white-space:nowrap}
+.ai-btn{all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--line);
+  display:grid;place-items:center;font:700 16px var(--display);color:var(--muted);background:var(--panel)}
+.ai-btn:hover{border-color:var(--dl);color:var(--dl)} .ai-btn:focus-visible{outline:2px solid var(--dl);outline-offset:2px}
+.ai-modal{position:fixed;inset:0;z-index:1000;background:rgba(8,12,24,.6);display:grid;place-items:center;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.ai-modal[hidden]{display:none!important}
+.ai-box{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:16px;width:100%;max-width:580px;max-height:100%;overflow:auto;
+  box-sizing:border-box;padding:18px 22px 22px;box-shadow:0 24px 70px rgba(0,0,0,.35);text-align:left;font-family:var(--body)}
+.ai-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.ai-head h2{margin:0;font:700 22px/1.2 var(--display);text-transform:none;letter-spacing:0;color:var(--ink)}
+.ai-close{all:unset;box-sizing:border-box;cursor:pointer;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;font-size:17px;color:var(--ink)}
+.ai-close:focus-visible{outline:2px solid var(--dl);outline-offset:2px}
+.ai-box h3{font:700 15px/1.3 var(--display);margin:16px 0 6px;color:var(--ink);text-transform:none;letter-spacing:0}
+.ai-box p,.ai-box li{font-size:14px;line-height:1.55;max-width:65ch}
+.ai-box p{margin:0 0 8px} .ai-box ul{margin:0 0 8px;padding-left:20px}
+.ai-box a{color:var(--dl)}
+.ai-vlog{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13.5px;line-height:1.5}
+.ai-vlog b{font:500 13px var(--mono);white-space:nowrap}
 </style>
 </head>
 <body>
 <main>
   <header>
-    <h1>Størrelsen teller <span style="font:500 .8rem var(--mono);color:var(--muted);letter-spacing:0;text-transform:none;vertical-align:middle">v1.6.0</span></h1>
+    <div class="ai-row"><h1>Størrelsen teller<span class="ai-ver">v1.7.0</span></h1><button type="button" class="ai-btn" id="aiBtn" aria-label="Om appen og hjelp" title="Om appen og hjelp" aria-haspopup="dialog">i</button></div>
     <p>Måler nedlasting og opplasting på linja di. Kun på WiFi eller kabel.</p>
   </header>
 
@@ -101,8 +123,50 @@ button:focus-visible{outline:3px solid var(--ul);outline-offset:2px}
   </section>
 </main>
 
+<div class="ai-modal" id="aiInfo" hidden>
+  <div class="ai-box" role="dialog" aria-modal="true" aria-labelledby="aiTitle">
+    <div class="ai-head"><h2 id="aiTitle">Om Størrelsen teller</h2><button type="button" class="ai-close" id="aiClose" aria-label="Lukk">✕</button></div>
+    <h3>Slik bruker du appen</h3>
+    <ul>
+      <li>Koble til <b>WiFi eller kabel</b> og trykk <b>Start</b>. En måling tar rundt et halvt minutt.</li>
+      <li>Trykk <b>Stopp</b> for å avbryte. Etter en måling er det en kort pause før neste kan startes.</li>
+      <li>Siste resultat huskes på denne enheten, med tidspunkt.</li>
+    </ul>
+    <h3>Hva tallene betyr</h3>
+    <ul>
+      <li><b>Ping:</b> svartiden til serveren i millisekunder. Lavere er bedre.</li>
+      <li><b>Jitter:</b> hvor mye pingen varierer fra måling til måling. Lav jitter er viktig for samtaler og spill.</li>
+      <li><b>Ned:</b> nedlastingsfart i Mbit/s, målt med flere samtidige strømmer i 10 sekunder.</li>
+      <li><b>Opp:</b> opplastingsfart i Mbit/s, målt på samme måte.</li>
+    </ul>
+    <p>Måleren har ujevn skala (0–5–10–25–50–100–250–500–1000) så både trege og raske linjer kan leses. Fart over 1000 Mbit/s vises som tall, mens nåla stopper på 1000.</p>
+    <h3>Mobilnett er sperret</h3>
+    <p>En måling bruker mye data, så den er sperret på mobilnett (4G/5G). Kan ikke nettleseren si hvilken tilkobling du har (for eksempel på PC), må du bekrefte at du er på WiFi eller kabel.</p>
+    <h3>Server og personvern</h3>
+    <p>Målingen går mot Cloudflares fartstest-servere. Server, leverandør og IP-adresse som vises, kommer fra Cloudflare. Ingenting lagres andre steder enn på denne enheten.</p>
+    <h3>Versjoner</h3>
+    <div class="ai-vlog">
+        <b>v1.7.0</b><span>Navn, versjon og info-knapp øverst til venstre, som i de andre appene.</span>
+        <b>v1.6.0</b><span>Måleren tåler ugyldige verdier og viser 0 i stedet for «NaN» eller fullt utslag. Automatiske tester.</span>
+        <b>v1.5.0</b><span>Nytt navn: Størrelsen teller (tidligere Linjemåler).</span>
+        <b>v1.4.3</b><span>Stopp avbryter med en gang, med 10 s pause etterpå.</span>
+        <b>v1.4.2</b><span>Ping og jitter settes til 0 ved start.</span>
+        <b>v1.4.1</b><span>Ned settes til 0 ved start.</span>
+        <b>v1.4.0</b><span>Jitter, større speedometer.</span>
+        <b>v1.3.0</b><span>Nål og tall går til 0 etter måling. Siste resultat huskes med tidspunkt.</span>
+        <b>v1.2.2</b><span>Mer robust nedlasting, viser feildetaljer.</span>
+        <b>v1.2.1</b><span>Tåler enkeltfeil fra Cloudflare, pause mellom tester.</span>
+        <b>v1.2.0</b><span>Kun Cloudflare, viser server, leverandør og IP.</span>
+        <b>v1.1.0</b><span>Fast mørkt tema, tall under nåla.</span>
+        <b>v1.0.0</b><span>Første versjon.</span>
+    </div>
+  </div>
+</div>
+
+
 <script>
-/* Størrelsen teller v1.6.0  (tidligere Linjemåler)
+/* Størrelsen teller v1.7.0  (tidligere Linjemåler)
+   1.7.0  Navn, versjon og info-knapp (i) øverst til venstre med bruksanvisning og versjonsliste
    1.6.0  Måleren tåler ugyldige verdier (NaN, uendelig, negative): viser 0 i stedet for «NaN» eller fullt utslag.
           Automatiske tester lagt til for måler, tilkobling, ping, nedlasting, opplasting og pauser
    1.5.0  Nytt navn: Størrelsen teller
@@ -116,7 +180,7 @@ button:focus-visible{outline:3px solid var(--ul);outline-offset:2px}
    1.2.0  Kun Cloudflare, serverinfo (server, leverandør, IP)
    1.1.0  Fast dark mode, tall flyttet under nåla
    1.0.0  Første versjon: speedometer, ping/ned/opp, sperre for mobilnett */
-const VERSION = "1.6.0";
+const VERSION = "1.7.0";
 // ---------- Servere ----------
 const SRV = {
   name: "Cloudflare",
@@ -393,6 +457,18 @@ $("go").onclick = async () => {
     updateButton(); startCooldown(cool);
   }
 };
+
+/* Info-vindu: (i) åpner, ✕, klikk utenfor eller Esc lukker */
+(function(){
+  var b = document.getElementById("aiBtn"), m = document.getElementById("aiInfo"), c = document.getElementById("aiClose");
+  if (!b || !m || !c) return;
+  function open(){ m.hidden = false; b.setAttribute("aria-expanded", "true"); c.focus(); }
+  function close(){ m.hidden = true; b.setAttribute("aria-expanded", "false"); b.focus(); }
+  b.addEventListener("click", open);
+  c.addEventListener("click", close);
+  m.addEventListener("click", function(e){ if (e.target === m) close(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !m.hidden) close(); });
+})();
 </script>
 </body>
 </html>

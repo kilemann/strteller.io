@@ -1,4 +1,4 @@
-# Størrelsen teller v1.6.0
+# Størrelsen teller v1.7.0
 
 Måler nedlasting, opplasting, ping og jitter på linja di mot Cloudflare. Kun på WiFi eller kabel: testen sperres på mobilnett.
 
@@ -24,6 +24,7 @@ Krever Node 22 eller nyere. Ingen avhengigheter.
 Ved ny versjon: skriv testen først, endre så appen, og oppdater versjon i `package.json`, overskriften, `VERSION`, endringsloggen øverst i skriptet og lista under.
 
 ## Versjoner
+- **1.7.0** – Navn, versjon og info-knapp (i) øverst til venstre med bruksanvisning og versjonsliste.
 - **1.6.0** – Måleren tåler ugyldige verdier (NaN, uendelig, negative) og viser 0 i stedet for «NaN» eller fullt utslag. Automatiske tester lagt til.
 - **1.5.0** – Nytt navn: Størrelsen teller (tidligere Linjemåler).
 - **1.4.3** – Stopp avbryter umiddelbart, 10 s pause etter stopp.

@@ -12,7 +12,7 @@ const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 const V = pkg.version;
 
 test('Versjon i overskriften, skriptkommentaren og VERSION er lik package.json', () => {
-  assert.match(html, new RegExp(`vertical-align:middle">v${V.replace(/\./g, '\\.')}</span>`), 'overskriften');
+  assert.match(html, new RegExp(`class="ai-ver">v${V.replace(/\./g, '\\.')}</span>`), 'overskriften');
   assert.match(html, new RegExp(`/\\* Størrelsen teller v${V.replace(/\./g, '\\.')}`), 'skriptkommentaren');
   assert.match(html, new RegExp(`const VERSION = "${V.replace(/\./g, '\\.')}";`), 'VERSION');
 });
